@@ -7,9 +7,12 @@ app.use(cors());
 app.use(express.json());
 
 // Root route
-app.get('/', (req, res) => {
+//  app.get('/', (req, res) => {
   res.send('FlowClient backend is running!');
-});
+});//
+app.get('/', (req, res) => 
+  res.send('FlowClient backend is live!'));
+
 
 app.use('/clients', require('./routes/clients'));
 app.use('/invoices', require('./routes/invoices'));
