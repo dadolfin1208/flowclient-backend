@@ -1,23 +1,25 @@
 const express = require('express');
-const cors = require('cors');
 const app = express();
 const PORT = process.env.PORT || 8080;
 
-app.use(cors());
+// Middleware to parse JSON and URL-encoded bodies
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// Import routers
+const clientsRouter = require('./routes/clients');
+const invoicesRouter = require('./routes/invoices');
+
+// Mount routers
+app.use('/clients', clientsRouter);
+app.use('/invoices', invoicesRouter);
 
 // Root route
 app.get('/', (req, res) => {
-  res.send('FlowClient backend is running!');
+  res.send('FlowClient backend running!');
 });
 
-
-// Other routes
-app.use('/clients', require('./routes/clients'));
-app.use('/invoices', require('./routes/invoices'));
-app.use('/ai', require('./routes/ai'));
-app.use('/contracts', require('./routes/contracts'));
-
+// Start the server
 app.listen(PORT, () => {
   console.log(`FlowClient backend running on port ${PORT}`);
 });
