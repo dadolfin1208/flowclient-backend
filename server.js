@@ -11,6 +11,7 @@ app.get('/', (req, res) => {
   res.send('FlowClient backend is running!');
 });
 
+
 // Other routes
 app.use('/clients', require('./routes/clients'));
 app.use('/invoices', require('./routes/invoices'));
