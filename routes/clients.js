@@ -18,5 +18,16 @@ router.post('/add', (req, res) => {
   res.json(newClient);
 });
 
+// Temporary GET route to add a client via browser for testing
+router.get('/add', (req, res) => {
+  const { name, email } = req.query;   // Get ?name=...&email=... from the URL
+  if (!name || !email) return res.send('Please provide ?name= and &email=');
+
+  const newClient = { id: clients.length + 1, name, email };
+  clients.push(newClient);
+  res.send(`Client added: ${JSON.stringify(newClient)}`);
+});
+
+
 module.exports = router;
 
