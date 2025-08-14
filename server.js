@@ -1,15 +1,18 @@
 const express = require('express');
+const bodyParser = require('body-parser');
+
 const app = express();
 const PORT = process.env.PORT || 8080;
 
 // Middleware to parse JSON bodies
-app.use(express.json());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 // Import routes
 const clientsRouter = require('./routes/clients');
 const invoicesRouter = require('./routes/invoices');
 
-// Root route just to verify the server is running
+// Root route
 app.get('/', (req, res) => {
   res.send('FlowClient backend is running!');
 });
@@ -22,3 +25,4 @@ app.use('/invoices', invoicesRouter);
 app.listen(PORT, () => {
   console.log(`FlowClient backend running on port ${PORT}`);
 });
+
