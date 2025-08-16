@@ -1,31 +1,26 @@
 const express = require('express');
-const path = require('path');
 const app = express();
-const PORT = 8080;
+const port = 8080;
 
-// Routers
-const clientsRouter = require('./routes/clients');
-const contractsRouter = require('./routes/contracts');
-const invoicesRouter = require('./routes/invoices');
-const aiRouter = require('./routes/ai');
+// Import routes
+const clientsRoute = require('./routes/clients');
+const contractsRoute = require('./routes/contracts');
+const invoicesRoute = require('./routes/invoices');
+const aiRoute = require('./routes/ai');
 
+// Middleware to parse JSON
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 
 // Serve static files from public folder
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static('public'));
 
-// API routes
-app.use('/clients', clientsRouter);
-app.use('/contracts', contractsRouter);
-app.use('/invoices', invoicesRouter);
-app.use('/ai', aiRouter);
+// Mount routes
+app.use('/clients', clientsRoute);
+app.use('/contracts', contractsRoute);
+app.use('/invoices', invoicesRoute);
+app.use('/ai', aiRoute);
 
-// Root test
-app.get('/', (req, res) => {
-  res.send('FlowClient backend is running!');
-});
-
-app.listen(PORT, () => {
-  console.log(`FlowClient backend running on port ${PORT}`);
+// Start server
+app.listen(port, () => {
+    console.log(`FlowClient backend running on port ${port}`);
 });

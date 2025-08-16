@@ -1,13 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>FlowClient Admin</title>
+<meta charset="UTF-8">
+<title>FlowClient Admin</title>
 </head>
 <body>
-  <h1>FlowClient Admin Page</h1>
-  <p>This is the admin interface.</p>
+<h1>FlowClient Admin Panel</h1>
+
+<button onclick="loadClients()">Load Clients</button>
+<button onclick="loadContracts()">Load Contracts</button>
+<button onclick="loadInvoices()">Load Invoices</button>
+
+<pre id="output"></pre>
+
+<script>
+async function loadClients() {
+    const res = await fetch('/clients');
+    const data = await res.json();
+    document.getElementById('output').textContent = JSON.stringify(data, null, 2);
+}
+
+async function loadContracts() {
+    const res = await fetch('/contracts');
+    const data = await res.json();
+    document.getElementById('output').textContent = JSON.stringify(data, null, 2);
+}
+
+async function loadInvoices() {
+    const res = await fetch('/invoices');
+    const data = await res.json();
+    document.getElementById('output').textContent = JSON.stringify(data, null, 2);
+}
+</script>
 </body>
 </html>
-
