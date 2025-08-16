@@ -1,22 +1,21 @@
 const express = require('express');
 const router = express.Router();
 
-// Clean list of invoices
-let invoices = [
-  { id: 1, client: "Barry Hensley", amount: 100, status: "unpaid" },
-  { id: 2, client: "Jane Smith", amount: 150, status: "paid" }
-];
+let invoices = [];
 
-// Get all invoices
-router.get('/', (req, res) => res.json(invoices));
+// GET all invoices
+router.get('/', (req, res) => {
+  res.json(invoices);
+});
 
-// Add a new invoice
+// POST /invoices/add
 router.post('/add', (req, res) => {
   const { client, amount } = req.body;
-  const newInvoice = { id: invoices.length + 1, client, amount, status: "unpaid" };
+  if (!client || !amount) return res.status(400).json({ error: 'Client and amount required' });
+
+  const newInvoice = { id: invoices.length + 1, client, amount, status: 'unpaid' };
   invoices.push(newInvoice);
   res.json(newInvoice);
 });
 
 module.exports = router;
-

@@ -1,28 +1,31 @@
 const express = require('express');
-const bodyParser = require('body-parser');
-
+const path = require('path');
 const app = express();
-const PORT = process.env.PORT || 8080;
+const PORT = 8080;
 
-// Middleware to parse JSON bodies
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-
-// Import routes
+// Routers
 const clientsRouter = require('./routes/clients');
+const contractsRouter = require('./routes/contracts');
 const invoicesRouter = require('./routes/invoices');
+const aiRouter = require('./routes/ai');
 
-// Root route
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// Serve static files from public folder
+app.use(express.static(path.join(__dirname, 'public')));
+
+// API routes
+app.use('/clients', clientsRouter);
+app.use('/contracts', contractsRouter);
+app.use('/invoices', invoicesRouter);
+app.use('/ai', aiRouter);
+
+// Root test
 app.get('/', (req, res) => {
   res.send('FlowClient backend is running!');
 });
 
-// Use routes
-app.use('/clients', clientsRouter);
-app.use('/invoices', invoicesRouter);
-
-// Start server
 app.listen(PORT, () => {
   console.log(`FlowClient backend running on port ${PORT}`);
 });
-

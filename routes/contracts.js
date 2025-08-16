@@ -1,9 +1,21 @@
 const express = require('express');
 const router = express.Router();
 
-router.post('/send-contract', (req, res) => {
-  const { client } = req.body;
-  res.json({ message: `Contract sent to ${client} (dummy response)` });
+let contracts = [];
+
+// GET all contracts
+router.get('/', (req, res) => {
+  res.json(contracts);
+});
+
+// POST /contracts/add
+router.post('/add', (req, res) => {
+  const { client, details } = req.body;
+  if (!client || !details) return res.status(400).json({ error: 'Client and details required' });
+
+  const newContract = { id: contracts.length + 1, client, details };
+  contracts.push(newContract);
+  res.json(newContract);
 });
 
 module.exports = router;

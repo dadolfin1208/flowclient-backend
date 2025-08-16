@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>FlowClient Live Test Page</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    button { margin: 5px 0; padding: 10px; width: 250px; }
+    pre { background: #f4f4f4; padding: 10px; max-height: 300px; overflow: auto; }
+  </style>
+</head>
+<body>
+  <h1>FlowClient Backend Live Test Page</h1>
+
+  <button onclick="addClient()">Add Test Client</button><br>
+  <button onclick="addInvoice()">Add Test Invoice</button><br>
+  <button onclick="sendContract()">Send Test Contract</button><br>
+  <button onclick="sendReminder()">Send Test Reminder</button>
+
+  <h2>Clients:</h2>
+  <pre id="clientsOutput"></pre>
+
+  <h2>Invoices:</h2>
+  <pre id="invoicesOutput"></pre>
+
+  <h2>Contracts:</h2>
+  <pre id="contractsOutput"></pre>
+
+  <h2>Response:</h2>
+  <pre id="output"></pre>
+
+  <script>
+    const baseURL = 'http://localhost:8080';
+
+    const clientsEl = document.getElementById('clientsOutput');
+    const invoicesEl = document.getElementById('invoicesOutput');
+    const contractsEl = document.getElementById('contractsOutput');
+    const outputEl = document.getElementById('output');
+
+    function showResponse(data) { outputEl.textContent = JSON.stringify(data, null, 2); }
+    function showClients(data) { clientsEl.textContent = JSON.stringify(data, null, 2); }
+    function showInvoices(data) { invoicesEl.textContent = JSON.stringify(data, null, 2); }
+    function showContracts(data) { contractsEl.textContent = JSON.stringify(data, null, 2); }
+
+    async function fetchClients() {
+      const res = await fetch(`${baseURL}/clients`);
+      showClients(await res.json());
+    }
+
+    async function fetchInvoices() {
+      const res = await fetch(`${baseURL}/invoices`);
+      showInvoices(await res.json());
+    }
+
+    async function fetchContracts() {
+      const res = await fetch(`${baseURL}/contracts`);
+      showContracts(await res.json());
+    }
+
+    async function addClient() {
+      const res = await fetch(`${baseURL}/clients/add?name=TestClient&email=test@example.com`);
+      const data = await res.json();
+      showResponse(data);
+      await refreshAll(); // Live update
+    }
+
+    async function addInvoice() {
+      const res = await fetch(`${baseURL}/invoices/add`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ client: 'TestClient', amount: 123 })
+      });
+      const data = await res.json();
+      showResponse(data);
+      await refreshAll(); // Live update
+    }
+
+    async function sendContract() {
+      const res = await fetch(`${baseURL}/contracts/send`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ client: 'TestClient' })
+      });
+      showResponse(await res.json());
+      await refreshAll(); // Live update
+    }
+
+    async function sendReminder() {
+      const res = await fetch(`${baseURL}/ai/reminder`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ client: 'TestClient' })
+      });
+      showResponse(await res.json());
+    }
+
+    async function refreshAll() {
+      await fetchClients();
+      await fetchInvoices();
+      await fetchContracts();
+    }
+
+    // Load immediately
+    refreshAll();
+
+    // Extra safety: auto-refresh every 5s
+    setInterval(refreshAll, 5000);
+  </script>
+</body>
+</html>
